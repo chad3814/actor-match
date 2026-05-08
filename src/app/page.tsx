@@ -8,6 +8,10 @@ import {
 import { SharedProjectCard } from "@/components/shared-project-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  MediaTypeFilter,
+  type MediaFilterValue,
+} from "@/components/media-type-filter";
 import type {
   ResolvedActor,
   SharedProject,
@@ -36,6 +40,7 @@ function newSlot(): ActorSlot {
 export default function HomePage() {
   const [slots, setSlots] = useState<ActorSlot[]>(() => [newSlot(), newSlot()]);
   const [results, setResults] = useState<ResultsState>({ kind: "idle" });
+  const [mediaFilter, setMediaFilter] = useState<MediaFilterValue>("all");
 
   function pick(slotId: string, person: PersonSearchResult) {
     setSlots((prev) =>
@@ -134,7 +139,12 @@ export default function HomePage() {
       ) : null}
 
       {results.kind === "ok" ? (
-        <ResultsView actors={results.actors} projects={results.projects} />
+        <ResultsView
+          actors={results.actors}
+          projects={results.projects}
+          mediaFilter={mediaFilter}
+          onMediaFilterChange={setMediaFilter}
+        />
       ) : null}
     </main>
   );
@@ -143,9 +153,13 @@ export default function HomePage() {
 function ResultsView({
   actors,
   projects,
+  mediaFilter,
+  onMediaFilterChange,
 }: {
   actors: ResolvedActor[];
   projects: SharedProject[];
+  mediaFilter: MediaFilterValue;
+  onMediaFilterChange: (next: MediaFilterValue) => void;
 }) {
   const resolvedMap = new Map(
     actors.map((a) => [a.id, { name: a.name, profilePath: a.profilePath }]),
@@ -159,21 +173,70 @@ function ResultsView({
     );
   }
 
+  const counts = {
+    all: projects.length,
+    movie: projects.filter((p) => p.mediaType === "movie").length,
+    tv: projects.filter((p) => p.mediaType === "tv").length,
+  };
+  const filtered =
+    mediaFilter === "all"
+      ? projects
+      : projects.filter((p) => p.mediaType === mediaFilter);
+
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold">
-        Found {projects.length} project{projects.length === 1 ? "" : "s"} with{" "}
-        {actors.map((a) => a.name).join(" & ")}
-      </h2>
-      <div className="grid gap-3 md:grid-cols-2">
-        {projects.map((project) => (
-          <SharedProjectCard
-            key={`${project.mediaType}:${project.tmdbId}`}
-            project={project}
-            resolvedActors={resolvedMap}
-          />
-        ))}
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <h2 className="text-lg font-semibold">
+          Found {projects.length} project{projects.length === 1 ? "" : "s"} with{" "}
+          {actors.map((a) => a.name).join(" & ")}
+        </h2>
+        <MediaTypeFilter
+          value={mediaFilter}
+          onChange={onMediaFilterChange}
+          counts={counts}
+        />
       </div>
+
+      {filtered.length === 0 ? (
+        <EmptyFilterMessage filter={mediaFilter} counts={counts} />
+      ) : (
+        <div className="grid gap-3 md:grid-cols-2">
+          {filtered.map((project) => (
+            <SharedProjectCard
+              key={`${project.mediaType}:${project.tmdbId}`}
+              project={project}
+              resolvedActors={resolvedMap}
+            />
+          ))}
+        </div>
+      )}
     </section>
+  );
+}
+
+function EmptyFilterMessage({
+  filter,
+  counts,
+}: {
+  filter: MediaFilterValue;
+  counts: { all: number; movie: number; tv: number };
+}) {
+  if (filter === "all") {
+    // Defensive: this branch is unreachable because filtered === projects when
+    // filter is "all", and the projects.length === 0 guard above handles it.
+    return (
+      <div className="rounded-md border bg-card p-6 text-center text-muted-foreground">
+        No projects to show.
+      </div>
+    );
+  }
+  const noun = filter === "movie" ? "movies" : "TV shows";
+  const otherType = filter === "movie" ? "TV" : "Movies";
+  return (
+    <div className="rounded-md border bg-card p-6 text-center text-muted-foreground">
+      No {noun} among the {counts.all} shared project
+      {counts.all === 1 ? "" : "s"} — try <strong>All</strong> or{" "}
+      <strong>{otherType}</strong>.
+    </div>
   );
 }
