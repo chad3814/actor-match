@@ -1,0 +1,29 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "id": 6384,
+      "name": "Keanu Reeves",
+      "profile_path": "/4D0PpNI0kmP58hgrwGC3wCjxhnm.jpg",
+      "popularity": 28.5,
+      "known_for": [
+        { "id": 603, "title": "The Matrix", "media_type": "movie" },
+        { "id": 27205, "title": "Inception", "media_type": "movie" },
+        { "id": 245891, "title": "John Wick", "media_type": "movie" },
+        { "id": 999, "title": "Should Not Appear", "media_type": "movie" }
+      ]
+    },
+    {
+      "id": 999991,
+      "name": "Null Title Person",
+      "profile_path": null,
+      "popularity": 0.1,
+      "known_for": [
+        { "id": 1, "title": null, "name": null, "media_type": "movie" },
+        { "id": 2, "name": "Some Show", "media_type": "tv" }
+      ]
+    }
+  ],
+  "total_pages": 1,
+  "total_results": 2
+}
