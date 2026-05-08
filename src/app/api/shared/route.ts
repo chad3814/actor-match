@@ -22,7 +22,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const parsed = bodySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "invalid_request", details: parsed.error.flatten() },
+      { error: "invalid_request", details: z.treeifyError(parsed.error) },
       { status: 400 },
     );
   }
