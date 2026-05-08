@@ -1,0 +1,55 @@
+{
+  "id": 6384,
+  "name": "Keanu Reeves",
+  "profile_path": "/keanu.jpg",
+  "combined_credits": {
+    "cast": [
+      {
+        "id": 603,
+        "media_type": "movie",
+        "title": "The Matrix",
+        "release_date": "1999-03-30",
+        "poster_path": "/matrix.jpg",
+        "overview": "A hacker discovers reality is a simulation.",
+        "character": "Neo"
+      },
+      {
+        "id": 245891,
+        "media_type": "movie",
+        "title": "John Wick",
+        "release_date": "2014-10-22",
+        "poster_path": "/jw.jpg",
+        "overview": "An ex-hitman seeks revenge.",
+        "character": "John Wick"
+      },
+      {
+        "id": 1234,
+        "media_type": "tv",
+        "name": "Generic Show",
+        "first_air_date": "2010-01-01",
+        "poster_path": "/show.jpg",
+        "overview": "Self appearance.",
+        "character": "Self"
+      },
+      {
+        "id": 5678,
+        "title": "No media_type"
+      }
+    ],
+    "crew": [
+      {
+        "id": 999,
+        "media_type": "movie",
+        "title": "Side Project",
+        "release_date": "2020-05-05",
+        "poster_path": "/sp.jpg",
+        "overview": "A passion project.",
+        "job": "Producer",
+        "department": "Production"
+      },
+      {
+        "id": 7777
+      }
+    ]
+  }
+}
